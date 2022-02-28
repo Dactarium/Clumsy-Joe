@@ -9,12 +9,13 @@ public class MainMenuUIController : MonoBehaviour
     [SerializeField] private Slider _sensitivitySlider;
     [SerializeField] private Slider _volumeSlider;
     [SerializeField] private GameObject _howToPlay;
+    [SerializeField] private GameObject _play;
     [SerializeField] private GameObject _settings;
     [SerializeField] private GameObject _credits;
 
     void Awake(){
-        _sensitivitySlider.value = PlayerPrefs.GetFloat("sensitivity", .5f);
-        _volumeSlider.value = PlayerPrefs.GetFloat("volume", .5f);
+        _sensitivitySlider.value = PlayerPrefs.GetFloat("sensitivity", .1f);
+        _volumeSlider.value = PlayerPrefs.GetFloat("volume", 1f);
         PlayerPrefs.SetString("seed", RandomString(10));
     }
 
@@ -23,19 +24,36 @@ public class MainMenuUIController : MonoBehaviour
         PlayerPrefs.SetFloat("volume", _volumeSlider.value);
     }
 
-    public void Play(){
+    public void Play(float difficulty){
+        PlayerPrefs.SetFloat("difficulty", difficulty);
         SceneManager.LoadScene(1);
     }
-
-    public void ShowSettings(){
-        if(_settings.activeSelf){
+    public void ShowPlay(){
+        if(_play.activeSelf){
             _howToPlay.SetActive(true);
+            _play.SetActive(false);
             _settings.SetActive(false);
             _credits.SetActive(false);
 
             return;
         }
         _howToPlay.SetActive(false);
+        _play.SetActive(true);
+        _settings.SetActive(false);
+        _credits.SetActive(false);
+    }
+
+    public void ShowSettings(){
+        if(_settings.activeSelf){
+            _howToPlay.SetActive(true);
+            _play.SetActive(false);
+            _settings.SetActive(false);
+            _credits.SetActive(false);
+
+            return;
+        }
+        _howToPlay.SetActive(false);
+        _play.SetActive(false);
         _settings.SetActive(true);
         _credits.SetActive(false);
     }
@@ -43,12 +61,14 @@ public class MainMenuUIController : MonoBehaviour
     public void ShowCredits(){
         if(_credits.activeSelf){
             _howToPlay.SetActive(true);
+            _play.SetActive(false);
             _settings.SetActive(false);
             _credits.SetActive(false);
 
             return;
         }
         _howToPlay.SetActive(false);
+        _play.SetActive(false);
         _settings.SetActive(false);
         _credits.SetActive(true);
     }

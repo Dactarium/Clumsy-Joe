@@ -40,8 +40,11 @@ public class PlayerController : MonoBehaviour
         jointDrive.positionSpring = _strength;
         _armRight.angularYZDrive = jointDrive;
 
-        _sensitivity = PlayerPrefs.GetFloat("sensitivity", .5f);
-        _audioSource.volume = PlayerPrefs.GetFloat("volume", .5f);
+        _sensitivity = PlayerPrefs.GetFloat("sensitivity", .1f);
+        _audioSource.volume = PlayerPrefs.GetFloat("volume", 1f);
+
+        _passiveClumsinessLimit *= PlayerPrefs.GetFloat("difficulty", 1f);
+        _activeClumsinessLimit *= PlayerPrefs.GetFloat("difficulty", 1f);
     }
 
     void Update()

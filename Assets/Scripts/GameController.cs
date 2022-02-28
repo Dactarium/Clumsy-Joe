@@ -28,11 +28,12 @@ public class GameController : MonoBehaviour
         _roomNumbers = GameManager.Instance.MapGenerator.RoomNumbers;
 
         PickRoom();
+        _timeGain /= PlayerPrefs.GetFloat("difficulty", 1f);
 
         _timer = _timeLimit;
 
         _audioSource = GetComponent<AudioSource>();
-        _audioSource.volume = PlayerPrefs.GetFloat("volume", .5f);
+        _audioSource.volume = PlayerPrefs.GetFloat("volume", 1f);
     }
 
     void Update(){

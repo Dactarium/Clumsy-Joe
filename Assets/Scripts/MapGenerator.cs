@@ -23,7 +23,7 @@ public class MapGenerator : MonoBehaviour
     private Color _floorColor;
     private GameObject[,] _map;
     void Start(){
-        _mapSize = Random.Range(_mapMinSize, _mapMaxSize);
+        _mapSize = (int)(Random.Range(_mapMinSize, _mapMaxSize) * PlayerPrefs.GetFloat("difficulty", 1f));
         _map = new GameObject[_mapSize, _mapSize];
         RoomNumbers = new List<string>();
         

@@ -8,7 +8,7 @@ public class Item : MonoBehaviour
     /*bool hasParent = false;
     bool isRunning = false;*/
     void Awake(){
-        GetComponent<AudioSource>().volume = PlayerPrefs.GetFloat("volume", .5f);
+        GetComponent<AudioSource>().volume = PlayerPrefs.GetFloat("volume", 1f);
     }
     void OnCollisionEnter(Collision other){
         if(!other.gameObject.CompareTag("Player") && !other.gameObject.CompareTag("Item")) GetComponent<AudioSource>().Play();
