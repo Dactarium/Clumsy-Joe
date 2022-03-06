@@ -30,7 +30,7 @@ public class PlayerController : MonoBehaviour
     private bool _isMoving = false;
     private AudioSource _audioSource;
     private RaycastHit _hit;
-    void Awake()
+    void Start()
     {
         _characterController = GetComponent<CharacterController>();
         _audioSource = GetComponent<AudioSource>();
@@ -43,8 +43,8 @@ public class PlayerController : MonoBehaviour
         _sensitivity = PlayerPrefs.GetFloat("sensitivity", .1f);
         _audioSource.volume = PlayerPrefs.GetFloat("volume", 1f);
 
-        _passiveClumsinessLimit *= PlayerPrefs.GetFloat("difficulty", 1f);
-        _activeClumsinessLimit *= PlayerPrefs.GetFloat("difficulty", 1f);
+        _passiveClumsinessLimit *= DifficultyManager.PassiveClumsinessMultiplier;
+        _activeClumsinessLimit *= DifficultyManager.ActiveClumsinessMultiplier;
     }
 
     void Update()
@@ -72,6 +72,7 @@ public class PlayerController : MonoBehaviour
 
         _activeClumsiness.x = movement.y * _activeClumsinessLimit.x;
         _activeClumsiness.z = movement.x * _activeClumsinessLimit.z;
+
         _characterController.Move(motion);
 
         _isMoving = movement.magnitude > .1f;
@@ -105,7 +106,7 @@ public class PlayerController : MonoBehaviour
     }
 
     void Balance(){
-         _activeClumsiness.y = -GameManager.Instance.InputManager.Balance * _activeClumsinessLimit.y;
+         _activeClumsiness.y = -GameManager.Instance.InputManager.Balance * _passiveClumsinessLimit.y;
     }
 
     void Interact(){

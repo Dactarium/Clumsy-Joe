@@ -28,7 +28,6 @@ public class GameController : MonoBehaviour
         _roomNumbers = GameManager.Instance.MapGenerator.RoomNumbers;
 
         PickRoom();
-        _timeGain /= PlayerPrefs.GetFloat("difficulty", 1f);
 
         _timer = _timeLimit;
 
@@ -40,7 +39,7 @@ public class GameController : MonoBehaviour
         if(_timer >= 0) GameManager.Instance.UIController.SetTimer(_timer);
         else if(!isGameEnded) EndGame();
 
-        if(isGameEnded) return;
+        if(isGameEnded || GameManager.Instance.InputManager.Pause) return;
         
         _timer -= Time.deltaTime;
 

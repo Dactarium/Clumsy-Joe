@@ -56,7 +56,6 @@ public class InputManager : MonoBehaviour
         Movement = _movement;
 
         //Mouse Input
-
         _mouse.x = Input.GetAxis("Mouse X");
         _mouse.y = Input.GetAxis("Mouse Y");
 

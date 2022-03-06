@@ -6,6 +6,7 @@ using TMPro;
 public class MapGenerator : MonoBehaviour
 {   
     public List<string>RoomNumbers{get; private set;}
+    public List<(TextMeshPro, RoomNumber)>EmptyRooms{get; private set;}
 
     [SerializeField] private GameObject[] _4ways;
     [SerializeField] private GameObject[] _3ways;
@@ -22,21 +23,24 @@ public class MapGenerator : MonoBehaviour
     private Color _wallColor;
     private Color _floorColor;
     private GameObject[,] _map;
+    private bool _isTwitchPlay = false;
     void Start(){
-        _mapSize = (int)(Random.Range(_mapMinSize, _mapMaxSize) * PlayerPrefs.GetFloat("difficulty", 1f));
+        _mapSize = (int)(Random.Range(_mapMinSize, _mapMaxSize) * DifficultyManager.MapSizeMultiplier);
         _map = new GameObject[_mapSize, _mapSize];
+
         RoomNumbers = new List<string>();
-        
+        EmptyRooms = new List<(TextMeshPro, RoomNumber)>();
+
         _floorColor = _floorColors[Random.Range(0, _floorColors.Length)];
         _wallColor = _wallColors[Random.Range(0, _wallColors.Length)];
 
+        _isTwitchPlay = !PlayerPrefs.GetString("TwitchName","").Equals("");
         generate();
-
+        fillRoom(PlayerPrefs.GetString("TwitchName"));
         GameManager.Instance.GameController.Setup();
     }
 
     void generate(){
-
         BlockMap blockMap = new BlockMap(_mapSize);
         
         for(int y = 0; y < _mapSize; y++){
@@ -84,15 +88,47 @@ public class MapGenerator : MonoBehaviour
                 }
 
                 RoomNumber roomNumber = tile.GetComponentInChildren<RoomNumber>();
-                if(roomNumber != null)
-                    for(int i = 0; i < roomNumber.RoomNumbers.Length; i++){
-                        roomNumber.RoomNumbers[i].text = getRandomRoomNumber();
+                if(roomNumber != null){
+                    if(_isTwitchPlay){
+                        for(int i = 0; i < roomNumber.RoomNumbers.Length; i++){
+                            EmptyRooms.Add((roomNumber.RoomNumbers[i], roomNumber));
+                            roomNumber.RoomNumbers[i].text = "Empty";
+                        }
                     }
-
+                    else
+                        for(int i = 0; i < roomNumber.RoomNumbers.Length; i++){
+                            roomNumber.RoomNumbers[i].text = getRandomRoomNumber();
+                        }
+                }
+                    
                 _map[x, y] = tile;
             }
         }
 
+    }
+
+    public void fillRoom(string number){
+        if(checkRoomExist(number)) return;
+        if(EmptyRooms.Count == 0) return;
+        
+        print(number);
+
+        (TextMeshPro, RoomNumber) room = EmptyRooms[Random.Range(0, EmptyRooms.Count)];
+        room.Item1.text = number;
+        room.Item2.setNumbers();
+
+        RoomNumbers.Add(number);
+        EmptyRooms.Remove(room);
+    }
+
+    bool checkRoomExist(string number){
+        for(int i = 0; i < RoomNumbers.Count; i++){
+            if(RoomNumbers[i].Equals(number)){
+                print("Room Exist!");
+                return true;
+            }
+        }
+        return false;
     }
 
     string getRandomRoomNumber(){

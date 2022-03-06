@@ -9,6 +9,10 @@ public class RoomNumber : MonoBehaviour
     [SerializeField] private Door[] _doors;
 
     void Start(){
+        setNumbers();
+    }
+
+    public void setNumbers(){
         for(int i = 0; i < RoomNumbers.Length; i++){
             _doors[i].RoomNumber = RoomNumbers[i].text;
         }
