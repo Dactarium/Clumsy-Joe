@@ -15,7 +15,7 @@ public class TwitchCommands : MonoBehaviour
         string command = message.Substring(_prefix.Length, commandEnd-_prefix.Length).ToLower();
 
         switch(command){
-            case "play":
+            case "join":
                 onJoin(sender);
                 break;
             default:
